@@ -8,6 +8,7 @@ from flask_restx import Api
 
 # Api
 app = Flask(__name__)
+
 # Repositories
 mongo_client = MongoDatabase()
 recipe_repository = RecipeRepository(mongo_client)
@@ -15,7 +16,6 @@ recipe_repository = RecipeRepository(mongo_client)
 # Services
 recipe_service = RecipeService(recipe_repository)
 
-# 
 # Rounts
 api = Api(app)
 api.add_resource(RecipeResource,'/recipes/create',resource_class_kwargs={
@@ -27,9 +27,3 @@ api.add_resource(RecipesListResource,'/recipes',resource_class_kwargs={
                 "app": app
             })
 
-
-# Publishing services
-
-# Validators
-
-# Application
