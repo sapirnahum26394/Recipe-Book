@@ -1,0 +1,21 @@
+version: '3'
+services:
+  recipebook:
+    image: recipebook:latest
+    networks:
+        - internalNetwork
+    restart: always
+    tty: true
+    stdin_open: true
+    ports: 
+      - '56733:5000'
+
+    user: root
+
+    volumes:
+      - ./MyRecipeBook:/app
+    entrypoint: /bin/bash
+
+networks:
+        internalNetwork:
+                external: false
