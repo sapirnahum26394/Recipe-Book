@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 
 function NewRecipe() {
@@ -54,26 +57,57 @@ function NewRecipe() {
         if (value[0] !== bullet) {
             target.value = `${bulletWithSpace}${value}`;
         }
-    }
+    };
+
   return (
-    <motion.div
+    <motion.div 
       animate={{opacity:1}}
       initial={{opacity:0}}
       exit={{opacity:0}}
       transition={{duration:0.5}}
     >
         <FormStyle onSubmit={submitHandle}>
-            <div>
-                <p>Title</p>
-                <input onChange={(e) => setTitle(e.target.value)} type="text" value={title}/>
+            <Box
+      component="form"
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <div>
+        <TextField
+          id="outlined-input"
+          label="Title"
+          type="text"
+        />        
+        <TextField
+            id="outlined-input"
+            label="Servings"
+            type="number"
+            InputLabelProps={{
+                shrink: true,
+            }}
+
+        />
+      </div>
+      <div>
+        <TextField
+            id="outlined-input"
+            label="Title"
+            type="text"
+        />    
+      </div>
+    </Box>
+                {/* <p>Title</p>
+                <LongInput onChange={(e) => setTitle(e.target.value)} type="text" value={title} rows={1}/>
                 <p>Ingredients</p>
                 <LongInput onChange={(e) => setIngredients(e.target.value)} type="textarea" value={ingredients} rows={4} onKeyUp={(e) => handleBullets(e)}/>
                 <p>Summary</p>
                 <LongInput onChange={(e) => setSummary(e.target.value)} type="text" value={summary} rows={4}/>
                 <p>Instructions</p>
                 <LongInput onChange={(e) => setInstructions(e.target.value)} type="text" value={instructions} rows={6}/>
-                <input type="submit" value="Submit"/>
-            </div>
+                <input type="submit" value="Submit"/> */}
         </FormStyle>
     </motion.div>
     
@@ -87,18 +121,7 @@ const FormStyle = styled.form`
         position: relative;
 
     }
-    input {
-        border:  none;
-        background: linear-gradient(35deg, #494949, #313131);
-        font-size: 1.5rem;
-        color: white;
-        padding: 1rem 3rem;
-        border: none;
-        border-radius: 1rem;
-        outline: none;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
+
     svg{
         position: absolute;
         top: 50%;
@@ -107,19 +130,19 @@ const FormStyle = styled.form`
         color: white;
     }
 `;
-const LongInput = styled.textarea`
-    border:  none;
-    background: linear-gradient(35deg, #494949, #313131);
-    font-size: 1.5rem;
-    color: white;
-    padding: 1rem 3rem;
-    border: none;
-    border-radius: 1rem;
-    outline: none;
-    width: 100%;
-    margin-bottom: 1rem;
+// const LongInput = styled.textarea`
+//     border:  none;
+//     background: linear-gradient(35deg, #494949, #313131);
+//     font-size: 1.5rem;
+//     color: white;
+//     padding: 1rem 3rem;
+//     border: none;
+//     border-radius: 1rem;
+//     outline: none;
+//     width: 100%;
+//     margin-bottom: 1rem;
 
-`;
+// `;
 
 
 export default NewRecipe

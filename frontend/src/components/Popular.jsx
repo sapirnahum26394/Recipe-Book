@@ -7,32 +7,53 @@ import { Link } from "react-router-dom";
 function Popular() {
 
     const [popular, setPopular] = useState([]);
-    useEffect(() => {
-         getPopular();
-    },[]);
-    const getPopular = async () => {
-        // const check = localStorage.getItem('popular');
-        // if (check){
-        //     setPopular(JSON.parse(check));
-        // }
-        // else{
-        var requestOptions = {
-            method: 'GET',
-            redirect: 'follow',
-            mode: 'no-cors'
-         };
-            
-        const api = await fetch("http://localhost:56733/recipes", requestOptions)
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-        const data = api.json();
-        console.log(data);
-
-        // localStorage.setItem('popular', JSON.stringify(data.recipes))
-        setPopular(data.recipes);
-        // }
+    const getPopular=()=>{
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "*/*");
+        myHeaders.append("Accept-Language", "en-US,en;q=0.9");
+        myHeaders.append("Connection", "keep-alive");
+        myHeaders.append("Referer", "http://localhost:3000/");
+        myHeaders.append("Sec-Fetch-Dest", "empty");
+        myHeaders.append("Sec-Fetch-Mode", "no-cors");
+        myHeaders.append("Sec-Fetch-Site", "same-site");
+        myHeaders.append("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
+        myHeaders.append("sec-ch-ua", "\"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"108\", \"Google Chrome\";v=\"108\"");
+        myHeaders.append("sec-ch-ua-mobile", "?0");
+        myHeaders.append("sec-ch-ua-platform", "\"Windows\"");
         
-    }
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow',
+          mode: 'no-cors'
+        };
+        
+        fetch("http://localhost:56733/get", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
+      }
+      useEffect(()=>{
+        getPopular()
+      },[])
+
+
+    // useEffect(() => {
+    //     getPopular();
+    // },[]);
+
+    // const getPopular = async () => {
+    //     const requestOptions = {
+    //         method: 'GET',
+    //         redirect: 'follow',
+    //         mode: 'no-cors'
+    //      };
+    //     const api = await fetch(`http://localhost:56733/get`, requestOptions)
+    //     const data = await api.json();
+    //     console.log(data)
+    //     setPopular(data.recipes);
+        
+    // }
   return (
     <div>
         <Wrapper>
