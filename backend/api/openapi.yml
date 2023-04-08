@@ -1,0 +1,137 @@
+openapi: 3.0.0
+info:
+  title: Recipe Website API
+  description: An API for managing recipes and comments on a recipe website
+  version: 1.0.0
+servers:
+  - url: https://api.recipes.com/v1
+    description: Production server
+
+paths:
+  /recipes:
+    get:
+      summary: Retrieve a list of recipes
+      parameters:
+        - name: cuisine
+          in: query
+          description: The cuisine of the recipes to retrieve
+          required: false
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          description: The difficulty level of the recipes to retrieve
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+        '404':
+          description: No recipes found
+    post:
+      summary: Create a new recipe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewRecipe'
+      responses:
+        '201':
+          description: The created recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+        '400':
+          description: Invalid request body
+
+  /recipes/{recipe_id}:
+    get:
+      summary: Retrieve a recipe by ID
+      parameters:
+        - name: recipe_id
+          in: path
+          description: The ID of the recipe to retrieve
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: The requested recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        '404':
+          description: Recipe not found
+    put:
+      summary: Update a recipe by ID
+      parameters:
+        - name: recipe_id
+          in: path
+          description: The ID of the recipe to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+      responses:
+        '200':
+          description: The updated recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+        '400':
+          description: Invalid request body
+        '404':
+          description: Recipe not found
+    delete:
+      summary: Delete a recipe by ID
+      parameters:
+        - name: recipe_id
+          in: path
+          description: The ID of the recipe to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Recipe deleted
+        '404':
+          description: Recipe not found
+
+  /recipes/{recipe_id}/comments:
+    get:
+      summary: Retrieve comments for a recipe
+      parameters:
+        - name: recipe_id
+          in: path
+          description: ID of the recipe to get comments for
+          required: true
+          schema:
+            type: string
+          responses:
+            '200':
+              description: OK
+              content:
+                application/json:
+                  schema:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comment'

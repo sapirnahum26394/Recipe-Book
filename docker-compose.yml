@@ -13,7 +13,7 @@ services:
     user: root
 
     volumes:
-      - ./MyRecipeBook:/app
+      - ./backend:/app
     entrypoint: /bin/bash
 
 networks:

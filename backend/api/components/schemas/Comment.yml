@@ -1,0 +1,19 @@
+components:
+  schemas:
+    Comment:
+      type: object
+      properties:
+        author:
+          type: string
+          description: The author of the comment.
+        text:
+          type: string
+          description: The text of the comment.
+        date:
+          type: string
+          format: date-time
+          description: The date and time the comment was posted.
+      required:
+        - author
+        - text
+        - date

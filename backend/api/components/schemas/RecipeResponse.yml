@@ -1,0 +1,47 @@
+components:
+  schemas:
+    RecipeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The unique identifier for the recipe.
+        name:
+          type: string
+          description: The name of the recipe.
+        description:
+          type: string
+          description: A description of the recipe.
+        ingredients:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the ingredient.
+              quantity:
+                type: string
+                description: The quantity of the ingredient required.
+        directions:
+          type: array
+          items:
+            type: string
+            description: A step in the recipe.
+        prep_time:
+          type: string
+          description: The preparation time required for the recipe.
+        cook_time:
+          type: string
+          description: The cooking time required for the recipe.
+        servings:
+          type: integer
+          description: The number of servings the recipe makes.
+      required:
+        - name
+        - ingredients
+        - directions
+        - prep_time
+        - cook_time
+        - servings

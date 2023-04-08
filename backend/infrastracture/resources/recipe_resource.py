@@ -5,22 +5,31 @@ class RecipeResource(Resource):
     def __init__(self, *args, recipe_service, **kwargs):
         self.recipe_service = recipe_service
 
-    def post(self):
+    def get(self, recipe_id):
+        try:
+            return self.recipe_service.get_recipe(recipe_id), 200
+        except Exception as e:
+            return str(e), 409
+
+    def patch(self, recipe_id):
         try:
             body = request.json
-            self.recipe_service.create_recipe(body=body)
-
+            return self.recipe_service.update_recipe(recipe_id, body), 200
         except Exception as e:
-            print(f"error==>{e}")
-
-    def get(self):
+            return str(e), 409
+    
+    def put(self, recipe_id):
         try:
-            recipe_id = request.args.get()
-            return self.recipe_service.get_recipe(recipe_id)
-
+            body = request.json
+            return self.recipe_service.put_recipe(recipe_id, body), 200
         except Exception as e:
-            print(f"error==>{e}")
+            return str(e), 409
 
+    def delete(self,recipe_id):
+        try:
+            return self.recipe_service.delete_recipe(recipe_id), 200
+        except Exception as e:
+            return str(e), 409
 
 class RecipesListResource(Resource):
     def __init__(self, *args, recipe_service, app, **kwargs):
@@ -35,10 +44,18 @@ class RecipesListResource(Resource):
                 status=200,
                 mimetype="application/json"
             )
-            res.headers['Accept']= 'application/json'
-            res.headers['Access-Control-Allow-Origin'] = '*'
-            res.headers['Access-Control-Allow-Headers'] = 'Content-Type, Origin, Accept'
-            return {"test":1}
+            res.headers["Content-Type"] = "application/json"
+            res.headers["Access-Control-Allow-Origi"] = "*"
+            return res
 
         except Exception as e:
-            print(f"error==>{e}")
+            return str(e), 409
+
+    def post(self):
+        try:
+            body = request.json
+            recipe = self.recipe_service.create_recipe(body=body)
+            return recipe, 200
+        
+        except Exception as e:
+            return str(e), 409
