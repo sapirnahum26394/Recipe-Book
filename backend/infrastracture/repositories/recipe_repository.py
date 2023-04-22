@@ -44,12 +44,12 @@ class RecipeRepository:
         return recipes_list
 
     def get_recipes_by_category(self, category):
-        recipe_dicts = self.client.find(self.db_name, self.collection_name, {'categories': {'$in': category}})
-        return [recipe_dicts.from_dict(recipe_dict) for recipe_dict in recipe_dicts]
+        recipes_list = self.client.find(self.collection_name, {f'categories.{category}': True})
+        return recipes_list
     
     def get_recipes_by_title(self, title):
-        recipe_dicts = self.client.find(self.db_name, self.collection_name, {'title': {'$regex': title}})
-        return [recipe_dicts.from_dict(recipe_dict) for recipe_dict in recipe_dicts]
+        recipes_list = self.client.find(self.collection_name, {'title': {'$regex': title}})
+        return recipes_list
     
     def add_comment_to_recipe(self, recipe_id, comment_id):
         result = self.client.update_one(self.collection_name,
@@ -68,3 +68,4 @@ class RecipeRepository:
         if result.matched_count == 0:
             raise Exception('Recipe not found')
         return True
+    

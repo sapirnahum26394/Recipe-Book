@@ -1,148 +1,145 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import React, { Component } from 'react';
+import { withFormik, Form, Field } from 'formik';
 
+const form_id = 'form_id';
+class MaintenanceForm extends Component {
 
-function NewRecipe() {
-
-    const bullet = "\u2022";
-    const bulletWithSpace = `${bullet} `;
-    const enter = 13;
-    const [title, setTitle] = useState('');
-    const [ingredients, setIngredients] = useState('');
-    const [summary, setSummary] = useState('');
-    const [instructions, setInstructions] = useState('');
-    const submitHandle = (e) => {
-        e.preventDefault();
-        let ingcopy = ingredients;
-        ingcopy = ingcopy.replaceAll(bulletWithSpace,'');
-        let recipe = {
-            "title": title,
-            "ingredients": ingcopy.split("\n").filter(Boolean),
-            "summary": summary,
-            "instructions": instructions
-        }  
-        postRecipe(recipe);
-        console.log(recipe);
-    };
-    const postRecipe = async (recipe) => {
-        await fetch(
-                `http://localhost:56733/recipes/create`,{
-                    method: 'POST',
-                    mode: 'cors',
-                    body: JSON.stringify(recipe)
-                }
-            );
-    };
-    const handleBullets = (e) => {
-
-        const { keyCode, target } = e;
-        const { selectionStart, value } = target;
-        
-        if (keyCode === enter) {
-            target.value = [...value]
-            .map((c, i) => i === selectionStart - 1
-                ? `\n${bulletWithSpace}`
-                : c
-            )
-            .join('');
-            
-            target.selectionStart = selectionStart+bulletWithSpace.length;
-            target.selectionEnd = selectionStart+bulletWithSpace.length;
-        }
-        
-        if (value[0] !== bullet) {
-            target.value = `${bulletWithSpace}${value}`;
-        }
-    };
-
-  return (
-    <motion.div 
-      animate={{opacity:1}}
-      initial={{opacity:0}}
-      exit={{opacity:0}}
-      transition={{duration:0.5}}
-    >
-        <FormStyle onSubmit={submitHandle}>
-            <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <div>
-        <TextField
-          id="outlined-input"
-          label="Title"
-          type="text"
-        />        
-        <TextField
-            id="outlined-input"
-            label="Servings"
-            type="number"
-            InputLabelProps={{
-                shrink: true,
-            }}
-
-        />
-      </div>
-      <div>
-        <TextField
-            id="outlined-input"
-            label="Title"
-            type="text"
-        />    
-      </div>
-    </Box>
-                {/* <p>Title</p>
-                <LongInput onChange={(e) => setTitle(e.target.value)} type="text" value={title} rows={1}/>
-                <p>Ingredients</p>
-                <LongInput onChange={(e) => setIngredients(e.target.value)} type="textarea" value={ingredients} rows={4} onKeyUp={(e) => handleBullets(e)}/>
-                <p>Summary</p>
-                <LongInput onChange={(e) => setSummary(e.target.value)} type="text" value={summary} rows={4}/>
-                <p>Instructions</p>
-                <LongInput onChange={(e) => setInstructions(e.target.value)} type="text" value={instructions} rows={6}/>
-                <input type="submit" value="Submit"/> */}
-        </FormStyle>
-    </motion.div>
+  editOnClick = (event) => {
+    event.preventDefault()
+    const data = !(this?.props?.status?.edit)
+    this.props.setStatus({
+      edit: data,
+    })
+  }
     
-  )
+  cancelOnClick = (event) => {
+    event.preventDefault();
+    this.props.resetForm();
+    this.props.setStatus({
+      edit: false,
+    });
+  }
+
+  _renderAction() {
+    return (
+      <React.Fragment>
+        <div className="form-statusbar">
+        {
+          this?.props?.status?.edit 
+          ? 
+          <React.Fragment>
+            <button className="btn btn-primary btn-sm" type="submit" form={form_id}>Save</button> 
+            <button className="btn btn-danger btn-sm" onClick={this.cancelOnClick} style={{marginLeft: "8px"}}>Cancel</button>
+          </React.Fragment>
+          : 
+          <button className="btn btn-primary btn-sm" onClick={this.editOnClick}>Edit</button> 
+        }
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  _renderFormView = () => {
+    return (
+      <React.Fragment>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Name</label>
+          <div className="col-sm-10">
+            <label type="text" name="name" className="form-control">
+              {this?.props?.fields?.name}
+            </label>
+          </div>
+        </div>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Email</label>
+          <div className="col-sm-10">
+            <label type="text" name="brand_name" className="form-control"> 
+              {this?.props?.fields?.email}
+            </label>
+          </div>
+        </div>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Mobile No</label>
+          <div className="col-sm-10">
+            <label type="text" name="device_type" className="form-control">
+              {this?.props?.fields?.mobile_no}
+            </label>
+          </div>
+        </div>
+      </React.Fragment>
+    );
+  }
+
+  _renderFormInput = () => {
+    return (
+      <React.Fragment>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Name</label>
+          <div className="col-sm-10">
+            <Field type="text" name="name" className="form-control" placeholder="Name" />
+          </div>
+        </div>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Email</label>
+          <div className="col-sm-10">
+            <Field type="text" name="email" className="form-control" placeholder="Email" />
+          </div>
+        </div>
+        <div className="form-group row">
+          <label className="col-sm-2 col-form-label">Mobile No</label>
+          <div className="col-sm-10">
+            <Field type="text" name="mobile_no" className="form-control" placeholder="Mobile No" />
+          </div>
+        </div>
+      </React.Fragment>        
+    );
+  }
+
+  render() {
+    return (
+      <React.Fragment>
+        <h2>Formik Form</h2>
+        {this._renderAction()}
+        <Form id={form_id}>
+        {
+          this?.props?.status?.edit 
+          ?
+          this._renderFormInput()
+          :
+          this._renderFormView()
+        }
+        </Form>
+        <h4>Current value</h4>
+        <div>
+          <pre>
+            <code>{JSON.stringify(this.props.fields, null, 2)}</code>
+          </pre>
+        </div>
+      </React.Fragment>
+    );
+  }
 }
 
-const FormStyle = styled.form`
-
-    div{
-        width: 100%;
-        position: relative;
-
+const NewRecipe = withFormik({
+  mapPropsToStatus: (props) =>  {
+    return {
+      edit: props?.edit || false,
     }
-
-    svg{
-        position: absolute;
-        top: 50%;
-        left: 0%;      
-        transform: translate(100%,-50%);
-        color: white;
+  },
+  mapPropsToValues: (props) => {
+    return {
+      name: props.fields.name,
+      email: props.fields.email,
+      mobile_no: props.fields.mobile_no
     }
-`;
-// const LongInput = styled.textarea`
-//     border:  none;
-//     background: linear-gradient(35deg, #494949, #313131);
-//     font-size: 1.5rem;
-//     color: white;
-//     padding: 1rem 3rem;
-//     border: none;
-//     border-radius: 1rem;
-//     outline: none;
-//     width: 100%;
-//     margin-bottom: 1rem;
+  }, 
+  enableReinitialize: true,
+  handleSubmit: (values, { props, ...actions }) => {
+    props.updateFields(values);
+    actions.setStatus({
+      edit: false,
+    });
+  }
+})(MaintenanceForm);
 
-// `;
-
-
-export default NewRecipe
+export default NewRecipe;

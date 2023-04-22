@@ -2,34 +2,45 @@ import styled from "styled-components"
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useNavigate} from "react-router-dom";
 
 function Recipe() {
-    
+    let navigate = useNavigate();
+
     let params = useParams();
     const [details, setDetails] = useState({});
     const [activeTab, setActiveTab] = useState("instructions");
     
-    const fetchDetails = async () => {
-        const data = await fetch(
-            `https://api.spoonacular.com/recipes/${params.name}/information?apiKey=${process.env.REACT_APP_API_KEY}`
-            );
-        const detailData = await data.json();
-        setDetails(detailData);
-        console.log(detailData)
+    const getDetails = async (name) => {
+        const check = localStorage.getItem(name);
+        if (check){
+            setDetails(JSON.parse(check));
+        }
+        else{
+            const data = await fetch(
+                `https://api.spoonacular.com/recipes/${name}/information?apiKey=${process.env.REACT_APP_API_KEY}`
+                );
+            const detailData = await data.json();
+            localStorage.setItem(name, JSON.stringify(detailData))
+            setDetails(detailData);
+        }
     };
     useEffect(()=>{
-        fetchDetails();
+        getDetails(params.name);
 
     }, [params.name]);
   return (
     <DetailWrapper>
         <Image>
-            <h2>{details.title}</h2>
+            <h1>{details.title}</h1>
             <img src={details.image} alt=""/>
         </Image>
         <Info>
             <Button className={activeTab ==='instructions' ? 'active': ''} onClick={()=>setActiveTab("instructions")}>Instructions</Button>
             <Button className={activeTab ==='ingredients' ? 'active': ''} onClick={()=>setActiveTab("ingredients")}>Ingredients</Button>
+            <Button onClick={() => navigate(-1)}>Edit</Button> 
+            <Button onClick={() => navigate(-1)}>Back</Button> 
+
             {activeTab === 'instructions' && (
                 <div>
                     <h3 dangerouslySetInnerHTML={{ __html: details.summary }}></h3>
@@ -40,7 +51,7 @@ function Recipe() {
             {activeTab === 'ingredients' && (
                 <ul>
                     {details.extendedIngredients.map((ingredient) => (
-                        <li key={ingredient.id}>{ingredient.original}</li>
+                        <li key={ingredient.id}><h3>{ingredient.original}</h3></li>
                     ))}
                 </ul>
             )}
@@ -49,10 +60,13 @@ function Recipe() {
     </DetailWrapper>
   )
 }
+
 const DetailWrapper = styled(motion.div)`
     margin-top: 10rem;
     margin-bottom: 5rem;
-    display: flex;
+    margin-left: 15%;
+    margin-right: 15%;
+    display: flax;
     h2{
         margin-bottom: 2rem;
     }
@@ -60,10 +74,7 @@ const DetailWrapper = styled(motion.div)`
         background: linear-gradient(36deg, #494949, #313131);
         color: white;
     }
-    li {
-        font-size: 1.2rem;
-        line-height: 2.5rem;
-    }
+
 
 `;
 const Button = styled.button`
@@ -77,10 +88,14 @@ const Button = styled.button`
 
 `;
 const Info = styled.div`
-    margin-left: 5rem;
-    width: 70%;
+    margin-left: 5%;
+    width: 60%;
+
 `;
 const Image = styled.div`
-    width: 30%;
+    img{
+      margin-top: 10%;
+    }
+    display: grid;
 `
 export default Recipe

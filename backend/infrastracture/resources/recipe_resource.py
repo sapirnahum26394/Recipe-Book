@@ -59,3 +59,43 @@ class RecipesListResource(Resource):
         
         except Exception as e:
             return str(e), 409
+        
+class RecipesCategoriesResource(Resource):
+    def __init__(self, *args, recipe_service, app, **kwargs):
+        self.recipe_service = recipe_service
+        self.app = app
+
+    def get(self, category):
+        try:
+            recipes = self.recipe_service.get_recipes_by_category(category)
+            res = Response(
+                response=json.dumps(recipes),
+                status=200,
+                mimetype="application/json"
+            )
+            res.headers["Content-Type"] = "application/json"
+            res.headers["Access-Control-Allow-Origi"] = "*"
+            return recipes, 200
+
+        except Exception as e:
+            return str(e), 409
+        
+class RecipesSearchResource(Resource):
+    def __init__(self, *args, recipe_service, app, **kwargs):
+        self.recipe_service = recipe_service
+        self.app = app
+
+    def get(self, text):
+        try:
+            recipes = self.recipe_service.search_recipes(text)
+            res = Response(
+                response=json.dumps(recipes),
+                status=200,
+                mimetype="application/json"
+            )
+            res.headers["Content-Type"] = "application/json"
+            res.headers["Access-Control-Allow-Origi"] = "*"
+            return res
+
+        except Exception as e:
+            return str(e), 409

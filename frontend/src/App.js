@@ -1,41 +1,39 @@
 import Pages from "./pages/Pages";
-import Categories from "./components/Categories";
 import { BrowserRouter } from "react-router-dom";
-import Search from "./components/Search";
 import styled from "styled-components";
-import { GiKnifeFork } from "react-icons/gi";
 import { Link } from "react-router-dom";
+import Search from "./components/Search";
+import MyToolBar from "./components/ToolBar"
 
 
 function App() {
+
   return (
-    <div className="App">
+    <div className="App" enablertl="true">
       <BrowserRouter>
-      <Nav>
-        <GiKnifeFork/>
-        <Logo to={"/"}>Deliciouss</Logo>
-      </Nav>
-        <Search/>
-        <Categories/>
+        <Nav>
+          <Logo to={'/'}>
+            <img src={require('./images/logo.png')} alt="logo"></img>
+          </Logo>
+          <MyToolBar/>
+          <Search/>
+        </Nav>
         <Pages/>
       </BrowserRouter>
     </div>
   );
 }
 const Logo = styled(Link)`
-  text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: 400;
-  font-family: 'Lobster Two', cursive;
-`;
+  img{
+    width: 100%;
+  }
+ `;
 const Nav = styled.div`
-  padding: 4rem 0rem;
-  display: flex;
+  display: grid;
   justify-content: flex-start;
   align-items: center;
   svg {
     font-size: 2rem;
   }
 `;
-
 export default App;

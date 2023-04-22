@@ -32,3 +32,11 @@ class RecipeService:
         if not validate_id_mismatch:
             raise Exception("mismatch recipe id")
         return self.recipe_repository.put_recipe(Recipe(body))
+
+    def get_recipes_by_category(self, category):
+        recipes_list = self.recipe_repository.get_recipes_by_category(category=category)
+        return {"recipes": recipes_list}
+    
+    def search_recipes(self, text):
+        recipes_list = self.recipe_repository.get_recipes_by_title(title=text)
+        return {"recipes": recipes_list}

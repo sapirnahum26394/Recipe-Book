@@ -2,7 +2,10 @@ from infrastracture.mongodb import MongoDatabase
 from infrastracture.repositories.recipe_repository import RecipeRepository
 from infrastracture.repositories.comment_repository import CommentRepository
 from infrastracture.resources.comment_resource import CommentResource, CommentsListResource
-from infrastracture.resources.recipe_resource import RecipeResource, RecipesListResource
+from infrastracture.resources.recipe_resource import (RecipeResource, 
+                                                      RecipesListResource, 
+                                                      RecipesCategoriesResource,
+                                                      RecipesSearchResource)
 from application.services.recipe_service import RecipeService
 from application.services.comment_service import CommentService
 from flask import Flask
@@ -30,6 +33,15 @@ api.add_resource(RecipesListResource,'/recipes',resource_class_kwargs={
                 "app": app
             })
 
+api.add_resource(RecipesCategoriesResource,'/recipes/category/<category>',resource_class_kwargs={
+                "recipe_service": recipe_service,
+                "app": app
+            })
+
+api.add_resource(RecipesSearchResource,'/recipes/search/<text>',resource_class_kwargs={
+                "recipe_service": recipe_service,
+                "app": app
+            })
 api.add_resource(CommentResource,'/recipes/<recipe_id>/comments/<comment_id>',resource_class_kwargs={
                 "comment_service": comment_service,
                 "app": app
