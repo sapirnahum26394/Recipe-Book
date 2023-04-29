@@ -13,8 +13,8 @@ function Pages() {
     <AnimatePresence mode='wait'>
         <Routes location={location} key={location.pathname}>
             <Route path='/' element={<Home/>} />
-            <Route path='/cuisine/:name' element={<Cuisine/>}/>
-            <Route path='/recipe/:name' element={<Recipe/>}/>
+            <Route path='/recipes/category/:name' element={<Cuisine/>}/>
+            <Route path='/recipes/:recipe_id' element={<Recipe/>}/>
             <Route path='/search/:key' element={<SearchResult/>}/>
             <Route path='/newrecipe' element={<NewRecipe/>}/>
         </Routes>

@@ -11,24 +11,25 @@ function Recipe() {
     const [details, setDetails] = useState({});
     const [activeTab, setActiveTab] = useState("instructions");
     
-    const getDetails = async (name) => {
-        const check = localStorage.getItem(name);
+    const getDetails = async (recipe_id) => {
+        const check = localStorage.getItem(recipe_id);
         if (check){
             setDetails(JSON.parse(check));
         }
         else{
-            const data = await fetch(
-                `https://api.spoonacular.com/recipes/${name}/information?apiKey=${process.env.REACT_APP_API_KEY}`
-                );
-            const detailData = await data.json();
-            localStorage.setItem(name, JSON.stringify(detailData))
-            setDetails(detailData);
+            fetch(`http://localhost:56733/recipes/${recipe_id}`).then(response => response.json())
+              .then(data => {
+                localStorage.setItem(recipe_id, JSON.stringify(data))
+                setDetails(data);
+              })
+              .catch(error => {
+                console.error(error);
+              });
         }
     };
     useEffect(()=>{
-        getDetails(params.name);
-
-    }, [params.name]);
+        getDetails(params.recipe_id);
+    }, [params.recipe_id]);
   return (
     <DetailWrapper>
         <Image>
@@ -44,14 +45,14 @@ function Recipe() {
             {activeTab === 'instructions' && (
                 <div>
                     <h3 dangerouslySetInnerHTML={{ __html: details.summary }}></h3>
-                    <h3 dangerouslySetInnerHTML={{ __html: details.instructions }}></h3>
+                    <h3 dangerouslySetInnerHTML={{ __html: details.instractions }}></h3>
                 </div>
                 
             )}
             {activeTab === 'ingredients' && (
                 <ul>
-                    {details.extendedIngredients.map((ingredient) => (
-                        <li key={ingredient.id}><h3>{ingredient.original}</h3></li>
+                    {details.ingredients.map((ingredient) => (
+                        <li key={ingredient}><h3>{ingredient}</h3></li>
                     ))}
                 </ul>
             )}

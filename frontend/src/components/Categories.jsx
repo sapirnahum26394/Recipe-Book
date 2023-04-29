@@ -53,7 +53,7 @@ function Categories() {
             return(
                 <SplideSlide key={category.id}>
                     <div className="card">
-                        <Link to={'/cuisine/'+category.id}>
+                        <Link to={'/recipes/category/'+category.id}>
                             <p>{category.title}</p>
                             <img src={category.background} alt={category.title}></img>
                         </Link>

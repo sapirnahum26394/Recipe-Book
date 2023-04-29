@@ -10,10 +10,10 @@ from application.services.recipe_service import RecipeService
 from application.services.comment_service import CommentService
 from flask import Flask
 from flask_restx import Api
-
+from flask_cors import CORS
 # Api
 app = Flask(__name__)
-
+CORS(app)
 # Repositories
 mongo_client = MongoDatabase()
 recipe_repository = RecipeRepository(mongo_client)

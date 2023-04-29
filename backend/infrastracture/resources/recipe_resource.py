@@ -46,7 +46,7 @@ class RecipesListResource(Resource):
             )
             res.headers["Content-Type"] = "application/json"
             res.headers["Access-Control-Allow-Origi"] = "*"
-            return res
+            return recipes, 200
 
         except Exception as e:
             return str(e), 409
@@ -75,7 +75,7 @@ class RecipesCategoriesResource(Resource):
             )
             res.headers["Content-Type"] = "application/json"
             res.headers["Access-Control-Allow-Origi"] = "*"
-            return recipes, 200
+            return recipes
 
         except Exception as e:
             return str(e), 409
